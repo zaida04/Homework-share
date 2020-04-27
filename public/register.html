@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Register - Brand</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css?h=f22698aa189968eddf8d7f9eb08372a9">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css?h=18313f04cea0e078412a028c5361bd4e">
+    <style>
+        #snap-login {
+            width: 100%;
+            outline: none !important;
+            border-style: none;
+            background-color: inherit;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<script>
+    window.snapKitInit = () => {
+        snap.loginkit.mountButton("snap-login", {
+            clientId: "bf5c56e7-6705-4688-a85d-da91f948e74f",
+            redirectURI: "http://localhost:80/register.html",
+            scopeList: [
+                "user.display_name",
+            ],
+            handleResponseCallback: () => {
+                snap.loginkit.fetchUserInfo().then(data => {
+                    console.log(data);
+                    document.getElementById("snap-login").style.visibility = "hidden";
+                    let xhttp = new XMLHttpRequest();
+                    let dat = {
+                        "username": data.data.me.externalId,
+                        "login": "snap"
+                    }
+                    xhttp.open("POST", "/signup", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("username=" + data["data"]["me"]["externalId"] + "&login=snap");
+                    xhttp.onreadystatechange = (e) => {
+                        console.log(xhttp.responseText);
+                    }
+                })
+            },
+        })
+    }
+
+    // Load the SDK asynchronously
+    (function (d, s, id) {
+        var js, sjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://sdk.snapkit.com/js/v1/login.js";
+        sjs.parentNode.insertBefore(js, sjs);
+    }(document, "script", "loginkit-sdk"));
+
+    function register() {
+        let xhttp = new XMLHttpRequest();
+        if (document.getElementById("passwordinput").value !== document.getElementById("repeatpasswordinput").value) {
+            return window.alert("Passwords don't match");
+        } else {
+            xhttp.open("POST", "/signup", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(
+                'username=' +document.getElementById("userinput").value + "&password=" + document.getElementById("passwordinput").value
+                );
+            xhttp.onreadystatechange = (e) => {
+                console.log(xhttp.responseText);
+            }
+        }
+    }
+</script>
+
+<body class="bg-gradient-primary">
+    <div class="container">
+        <div class="card shadow-lg o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-flex">
+                        <div class="flex-grow-1 bg-register-image"
+                            style="background-image: url(&quot;/assets/img/dogs/image2.jpeg?h=a0a7d00bcd8e4f84f4d8ce636a8f94d4&quot;);">
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h4 class="text-dark mb-4">Create an Account!</h4>
+                            </div>
+                            <div class="form-group"><input class="form-control form-control-user" id="userinput"
+                                    aria-describedby="User" placeholder="Username" name="username"></div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
+                                        type="password" id="passwordinput" placeholder="Password" name="password">
+                                </div>
+                                <div class="col-sm-6"><input class="form-control form-control-user" type="password"
+                                        id="repeatpasswordinput" placeholder="Repeat Password" name="password_repeat">
+                                </div>
+                            </div><button class="btn btn-primary btn-block text-white btn-user"
+                                onclick="register()">Register Account</button>
+                            <hr><button id="snap-login" type=""> Register with Snapchat </button>
+                            <hr>
+                            <div class="text-center"><a id="snap-login" class="small" href="/login.html">Already have an
+                                    account? Login!</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/jquery.min.js?h=83e266cb1712b47c265f77a8f9e18451"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js?h=e46528792882c54882f660b60936a0fc"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="/assets/js/theme.js?h=6d33b44a6dcb451ae1ea7efc7b5c5e30"></script>
+</body>
+
+</html>
