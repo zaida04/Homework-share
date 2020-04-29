@@ -1,0 +1,19 @@
+extends layout.pug
+
+block content
+  script. 
+    function deletefunc() {
+      fetch("/notes/" + '#{note._id}', {method: 'delete'}).then(window.location.href="/")
+    }
+  .card(style='width:75%; height:100%; margin: 0 auto;')
+    .card-body
+      .alert.alert-warning
+        h7 If you are on mobile, you can hold the image down and open it in a new tab
+      if(user)
+        if(user.admin)
+          h7.glyphicon.glyphicon-trash(onclick="deletefunc()" style="bottom-padding: 20px; color: red; cursor: pointer;") Delete Note
+      h4.card-title.text-primary #{note.name}
+      p.card-text #{note.creator.username}
+      a(href="data:" + note.image.mime + ";base64," + note.image.buf)
+        img.card-img-bottom(src="data:" + note.image.mime + ";base64," + note.image.buf alt='Card image')
+

@@ -1,0 +1,56 @@
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 26px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        input {
+            display: block;
+            margin-top: 8px;
+            background: #ffffff;
+            padding: 8px;
+            font-size: 12px;
+            border: #e2e2e2 2px solid;
+            transition: 0.3s ease;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        input:focus {
+            border: #0091ff 2px solid;
+            outline: 0;
+        }
+
+        input[type="submit"] {
+            background-color: #e2e2e2;
+        }
+
+        input[type="submit"]:hover {
+            border: #9c9c9c 2px solid;
+        }
+
+        *,
+        html,
+        body {
+            font-family: 'Open Sans', 'Segoe UI Light', 'Droid Sans', 'Helvetica', Verdana, sans-serif !important;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="/create/note" enctype="multipart/form-data" method="POST">
+        <input name="name" placeholder="note name" />
+        <input type="file" name="image" accept="image/*" />
+        <input type="submit" value="Upload Photo" />
+    </form>
+</body>
+
+</html>

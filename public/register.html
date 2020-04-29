@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Register - Brand</title>
+    <title>Register - Homework-Share</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css?h=f22698aa189968eddf8d7f9eb08372a9">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -38,9 +38,12 @@
                     }
                     xhttp.open("POST", "/signup", true);
                     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                    xhttp.send("username=" + data["data"]["me"]["externalId"] + "&login=snap");
+                    xhttp.send("username=" + data["data"]["me"]["externalId"] + "&login=snap" + "&displayName=" + data["data"]["me"]["displayName"]);
                     xhttp.onreadystatechange = (e) => {
-                        console.log(xhttp.responseText);
+                        if (xhttp.status == 201)
+                            window.location.href="/";
+                        else
+                            warn("Snap login failed, please refresh the page and try again")
                     }
                 })
             },
@@ -57,24 +60,30 @@
         sjs.parentNode.insertBefore(js, sjs);
     }(document, "script", "loginkit-sdk"));
 
-    function register() {
-        let xhttp = new XMLHttpRequest();
-        if (document.getElementById("passwordinput").value !== document.getElementById("repeatpasswordinput").value) {
-            return window.alert("Passwords don't match");
+
+    function match_pass() {
+        let pass = document.getElementById("passwordinput");
+        let pass2 = document.getElementById("repeatpasswordinput");
+        pass2.setCustomValidity("")
+        if (pass.value !== pass2.value) {
+            pass2.setCustomValidity("Passwords don't match");
+            pass2.reportValidity()
         } else {
-            xhttp.open("POST", "/signup", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(
-                'username=' +document.getElementById("userinput").value + "&password=" + document.getElementById("passwordinput").value
-                );
-            xhttp.onreadystatechange = (e) => {
-                console.log(xhttp.responseText);
-            }
+            return
         }
+    }
+
+    function warn(e) {
+        let error_field = document.getElementById("error-failed");
+        error_field.style.visibility = "visible";
+        error_field.textContent = "Error: " + e;
     }
 </script>
 
 <body class="bg-gradient-primary">
+    <div style="top: 0px; visibility:hidden;" id="error-failed" class="alert alert-danger" role="alert">
+        <h1></h1>
+    </div>
     <div class="container">
         <div class="card shadow-lg o-hidden border-0 my-5">
             <div class="card-body p-0">
@@ -89,18 +98,25 @@
                             <div class="text-center">
                                 <h4 class="text-dark mb-4">Create an Account!</h4>
                             </div>
-                            <div class="form-group"><input class="form-control form-control-user" id="userinput"
-                                    aria-describedby="User" placeholder="Username" name="username"></div>
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
-                                        type="password" id="passwordinput" placeholder="Password" name="password">
-                                </div>
-                                <div class="col-sm-6"><input class="form-control form-control-user" type="password"
-                                        id="repeatpasswordinput" placeholder="Repeat Password" name="password_repeat">
-                                </div>
-                            </div><button class="btn btn-primary btn-block text-white btn-user"
-                                onclick="register()">Register Account</button>
-                            <hr><button id="snap-login" type=""> Register with Snapchat </button>
+                            <form id="register-form">
+                                <div class="form-group"><input class="form-control form-control-user" id="userinput"
+                                        aria-describedby="User" placeholder="Username" min="4" max="40" name="username"
+                                        required></div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user"
+                                            type="password" id="passwordinput" min="4" max="40" placeholder="Password"
+                                            name="password" required>
+                                    </div>
+                                    <div class="col-sm-6"><input class="form-control form-control-user" type="password"
+                                            id="repeatpasswordinput" oninput="return match_pass()"
+                                            placeholder="Repeat Password" name="password_repeat" min="4" max="40"
+                                            required>
+                                    </div>
+                                </div><button class="btn btn-primary btn-block text-white btn-user" id="sub-button"
+                                    type="submit">Register Account</button>
+                            </form>
+                            <hr>
+                            <div style="width: auto;"><button id="snap-login" style="transform:scale(1.00);-webkit-transform:scale(0.87);transform-origin:0 0;-webkit-transform-origin:0 0;" type=""> Register with Snapchat </button></div>
                             <hr>
                             <div class="text-center"><a id="snap-login" class="small" href="/login.html">Already have an
                                     account? Login!</a></div>
@@ -110,6 +126,34 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('register-form').onsubmit = function (event) {
+            event.preventDefault();
+            let xhttp = new XMLHttpRequest();
+            if (!document.getElementById("register-form").checkValidity()) {
+                return
+            } else {
+                xhttp.onreadystatechange = (e) => {
+                    if (xhttp.status == 201) {
+                    console.log(xhttp.responseText)
+                        window.location.href="/";
+                    }
+                    else if (xhttp.status == 234)
+                        warn("User already exists with that username")
+                    else if (xhttp.status == 400)
+                        warn("Must provide a password")
+                }
+                xhttp.open("POST", "/signup", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(
+                    'username=' + document.getElementById("userinput").value + "&password=" + document
+                    .getElementById(
+                        "passwordinput").value
+                );
+            }
+
+        }
+    </script>
     <script src="/assets/js/jquery.min.js?h=83e266cb1712b47c265f77a8f9e18451"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js?h=e46528792882c54882f660b60936a0fc"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>

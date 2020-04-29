@@ -6,6 +6,10 @@ var User = new mongoose.Schema({
         min: 3,
         max: 255
     },
+    name: {
+        type: String,
+        required: false
+    },
     date: {
         type: Date,
         default: Date.now()
@@ -17,6 +21,10 @@ var User = new mongoose.Schema({
     type: {
         type: String,
         required: false
+    },
+    admin: {
+        type: Boolean,
+        required: true
     }
 });
 

@@ -4,48 +4,150 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Login - Brand</title>
+    <title>Login - Homework-Share</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css?h=f22698aa189968eddf8d7f9eb08372a9">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css?h=18313f04cea0e078412a028c5361bd4e">
+    <style>
+        #snap-login {
+            width: 100%;
+            outline: none !important;
+            border-style: none;
+            background-color: inherit;
+            margin: 0 auto;
+        }
+    </style>
 </head>
+<script>
+    window.snapKitInit = () => {
+        snap.loginkit.mountButton("snap-login", {
+            clientId: "bf5c56e7-6705-4688-a85d-da91f948e74f",
+            redirectURI: "http://localhost:80/login.html",
+            scopeList: [
+                "user.display_name",
+            ],
+            handleResponseCallback: () => {
+                snap.loginkit.fetchUserInfo().then(data => {
+                    console.log(data);
+                    document.getElementById("snap-login").style.visibility = "hidden";
+                    let xhttp = new XMLHttpRequest();
+                    let dat = {
+                        "username": data.data.me.externalId,
+                        "login": "snap"
+                    }
+                    xhttp.open("POST", "/signup", true);
+                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhttp.send("username=" + data["data"]["me"]["externalId"] + "&login=snap" +
+                        "&displayName=" + data["data"]["me"]["displayName"]);
+                    xhttp.onreadystatechange = (e) => {
+                        if (xhttp.status == 201)
+                            window.location.href = "/";
+                        else
+                            warn("Snap login failed, please refresh the page and try again")
+                    }
+                })
+            },
+        })
+    }
+
+    // Load the SDK asynchronously
+    (function (d, s, id) {
+        var js, sjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://sdk.snapkit.com/js/v1/login.js";
+        sjs.parentNode.insertBefore(js, sjs);
+    }(document, "script", "loginkit-sdk"));
+
+
+    function match_pass() {
+        let pass = document.getElementById("passwordinput");
+        let pass2 = document.getElementById("repeatpasswordinput");
+        pass2.setCustomValidity("")
+        if (pass.value !== pass2.value) {
+            pass2.setCustomValidity("Passwords don't match");
+            pass2.reportValidity()
+        } else {
+            return
+        }
+    }
+
+    function warn(e) {
+        let error_field = document.getElementById("error-failed");
+        error_field.style.visibility = "visible";
+        error_field.textContent = "Error: " + e;
+    }
+</script>
 
 <body class="bg-gradient-primary">
+    <div style="top: 0px; visibility:hidden;" id="error-failed" class="alert alert-danger" role="alert">
+        <h1></h1>
+    </div>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-9 col-lg-12 col-xl-10">
-                <div class="card shadow-lg o-hidden border-0 my-5">
-                    <div class="card-body p-0">
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-flex">
-                                <div class="flex-grow-1 bg-login-image" style="background-image: url(&quot;/assets/img/dogs/image3.jpeg?h=cbc3a40dae521ddee89bf6b026abde71&quot;);"></div>
+        <div class="card shadow-lg o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-flex">
+                        <div class="flex-grow-1 bg-register-image"
+                            style="background-image: url(&quot;/assets/img/dogs/image2.jpeg?h=a0a7d00bcd8e4f84f4d8ce636a8f94d4&quot;);">
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h4 class="text-dark mb-4">Log in to your account!</h4>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h4 class="text-dark mb-4">Welcome Back!</h4>
-                                    </div>
-                                    <form class="user">
-                                        <div class="form-group"><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." name="email"></div>
-                                        <div class="form-group"><input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Password" name="password"></div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <div class="form-check"><input class="form-check-input custom-control-input" type="checkbox" id="formCheck-1"><label class="form-check-label custom-control-label" for="formCheck-1">Remember Me</label></div>
-                                            </div>
-                                        </div><button class="btn btn-primary btn-block text-white btn-user" type="submit">Login</button>
-                                        <hr><a class="btn btn-primary btn-block text-white btn-google btn-user" role="button"><i class="fab fa-google"></i>&nbsp; Login with Google</a><a class="btn btn-primary btn-block text-white btn-facebook btn-user" role="button"><i class="fab fa-facebook-f"></i>&nbsp; Login with Facebook</a>
-                                        <hr>
-                                    </form>
-                                    <div class="text-center"><a class="small" href="forgot-password.html">Forgot Password?</a></div>
-                                    <div class="text-center"><a class="small" href="/register.html">Create an Account!</a></div>
-                                </div>
-                            </div>
+                            <form id="login-form">
+                                <div class="form-group"><input class="form-control form-control-user" id="userinput"
+                                        aria-describedby="User" placeholder="Username" min="4" max="40" name="username"
+                                        required></div>
+                                <div class="form-group">
+                                    <div class="form-group"><input type="password" class="form-control form-control-user" id="passwordinput" type="input" placeholder="Password" min="4" max="40" name="password"
+                                        required></div>
+                                </div><button class="btn btn-primary btn-block text-white btn-user" id="sub-button"
+                                    type="submit">Login Account</button>
+                            </form>
+                            <hr>
+                            <div style="width: auto;"><button id="snap-login"
+                                    style="transform:scale(1.00);-webkit-transform:scale(0.87);transform-origin:0 0;-webkit-transform-origin:0 0;"
+                                    type=""> Register with Snapchat </button></div>
+                            <hr>
+                            <div class="text-center"><a id="snap-login" class="small" href="/register.html">Don't have an account? Create one!</a></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('register-form').onsubmit = function (event) {
+            event.preventDefault();
+            let xhttp = new XMLHttpRequest();
+            if (!document.getElementById("register-form").checkValidity()) {
+                return
+            } else {
+                xhttp.onreadystatechange = (e) => {
+                    if (xhttp.status == 201) {
+                        console.log(xhttp.responseText)
+                        window.location.href = "/";
+                    } else if (xhttp.status == 234)
+                        warn("User already exists with that username")
+                    else if (xhttp.status == 400)
+                        warn("Must provide a password")
+                }
+                xhttp.open("POST", "/signup", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(
+                    'username=' + document.getElementById("userinput").value + "&password=" + document
+                    .getElementById(
+                        "passwordinput").value
+                );
+            }
+
+        }
+    </script>
     <script src="/assets/js/jquery.min.js?h=83e266cb1712b47c265f77a8f9e18451"></script>
     <script src="/assets/bootstrap/js/bootstrap.min.js?h=e46528792882c54882f660b60936a0fc"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>

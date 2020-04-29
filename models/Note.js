@@ -21,8 +21,14 @@ var Note = new mongoose.Schema({
         default: Date.now()
     },
     image: {
-        type: Buffer,
-        required: false
+        buf: {
+            type: Buffer,
+            required: true
+        },
+        mime: {
+            type: String,
+            required: true
+        }
     }
 });
 

@@ -1,0 +1,52 @@
+doctype html
+head
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no')
+    title Homework Share
+    link(rel='stylesheet' href='/assets/bootstrap/css/bootstrap.min.css?h=f22698aa189968eddf8d7f9eb08372a9')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')
+    link(rel='stylesheet' href='/assets/fonts/fontawesome-all.min.css?h=18313f04cea0e078412a028c5361bd4e')
+#wrapper
+    #content-wrapper.d-flex.flex-column
+        #content
+            nav.navbar.navbar-light.navbar-expand.bg-white.shadow.mb-4.topbar.static-top
+                .container-fluid
+                    button#sidebarToggleTop.btn.btn-link.d-md-none.rounded-circle.mr-3(type='button')
+                        i.fas.fa-bars
+                    a(href="/" style="text-decoration: none;")
+                        h2.text-left.text-primary Homework-Share
+                    form.form-inline.d-none.d-sm-inline-block.mr-auto.ml-md-3.my-2.my-md-0.mw-100.navbar-search
+                        .input-group
+                    if user != undefined
+                        ul.nav.navbar-nav.flex-nowrap.ml-auto
+                            li.nav-item.dropdown.no-arrow(role='presentation')
+                                .nav-item.dropdown.no-arrow
+                                    a.dropdown-toggle.nav-link(data-toggle='dropdown' aria-expanded='false' href='#')
+                                        if(user.name)
+                                            span.mr-2.text-gray-600.small #{user.name}
+                                        else if(user.username)
+                                            span.mr-2.text-gray-600.small #{user.username}
+                                    .dropdown-menu.shadow.dropdown-menu-right.animated--grow-in(role='menu')
+                                        a.dropdown-item(role='presentation' href='#')
+                                            i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
+                                            | &nbsp;Profile
+                                        a.dropdown-item(role='presentation' href='/create/note')
+                                            i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
+                                            | &nbsp;Create Note
+                                        .dropdown-divider
+                                        a.dropdown-item(role='presentation' href='/logout')
+                                            i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
+                                            | &nbsp;Logout
+                    else
+                        div(style="right:1px;")
+                        a(href="/login.html")
+                            span.mr-2.text-gray-600.small Login
+                        span.mr-2.text-gray-600.small /
+                        a(href="/register.html")
+                            span.mr-2.text-gray-600.small Register  
+        #wrap-this(style="padding-bottom: 100px")
+            block content
+script(src='/assets/js/jquery.min.js?h=83e266cb1712b47c265f77a8f9e18451')
+script(src='/assets/bootstrap/js/bootstrap.min.js?h=e46528792882c54882f660b60936a0fc')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js')
+script(src='/assets/js/theme.js?h=6d33b44a6dcb451ae1ea7efc7b5c5e30')
