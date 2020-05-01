@@ -25,7 +25,7 @@ block content
                 .row.align-items-center.no-gutters
                   .col.mr-2
                     .text-uppercase.text-primary.font-weight-bold.text-xs.mb-1
-                      span votes: 0
+                      span views: #{note.views.length}
                     .text-dark.font-weight-bold.h5.mb-0
                       span=note.name
                 img(src="data:" + note.image.mime + ";base64," + note.image.buf style='width: 100%;height: 250px;padding: 5px;')

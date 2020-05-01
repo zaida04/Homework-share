@@ -9,11 +9,18 @@ block content
     .card-body
       .alert.alert-warning
         h7 If you are on mobile, you can hold the image down and open it in a new tab
+      h7.text-primary(id="view_count") Views: #{note.views.length}
+      br
+      br
       if(user)
-        if(user.admin)
+        if(user.admin || note.creator.id == user.id)
           h7.glyphicon.glyphicon-trash(onclick="deletefunc()" style="bottom-padding: 20px; color: red; cursor: pointer;") Delete Note
-      h4.card-title.text-primary #{note.name}
-      p.card-text #{note.creator.username}
+      h4.card-title.text-primary 
+        b #{note.name}
+      if(note.creator.showname)
+        if(note.creator.type == "snap")
+          p.card-text Uploaded By: #{note.creator.name}  
+        else
+          p.card-text Uploaded By: #{note.creator.username}
       a(href="data:" + note.image.mime + ";base64," + note.image.buf)
         img.card-img-bottom(src="data:" + note.image.mime + ";base64," + note.image.buf alt='Card image')
-

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Login - Homework-Share</title>
+    <title>Login - Note-Share</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css?h=f22698aa189968eddf8d7f9eb08372a9">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -61,19 +61,6 @@
         sjs.parentNode.insertBefore(js, sjs);
     }(document, "script", "loginkit-sdk"));
 
-
-    function match_pass() {
-        let pass = document.getElementById("passwordinput");
-        let pass2 = document.getElementById("repeatpasswordinput");
-        pass2.setCustomValidity("")
-        if (pass.value !== pass2.value) {
-            pass2.setCustomValidity("Passwords don't match");
-            pass2.reportValidity()
-        } else {
-            return
-        }
-    }
-
     function warn(e) {
         let error_field = document.getElementById("error-failed");
         error_field.style.visibility = "visible";
@@ -122,22 +109,24 @@
         </div>
     </div>
     <script>
-        document.getElementById('register-form').onsubmit = function (event) {
+        document.getElementById('login-form').onsubmit = function (event) {
             event.preventDefault();
             let xhttp = new XMLHttpRequest();
-            if (!document.getElementById("register-form").checkValidity()) {
+            if (!document.getElementById("login-form").checkValidity()) {
                 return
             } else {
                 xhttp.onreadystatechange = (e) => {
-                    if (xhttp.status == 201) {
-                        console.log(xhttp.responseText)
+                    console.log(xhttp.textContent)
+                    if (xhttp.status == 201) 
                         window.location.href = "/";
-                    } else if (xhttp.status == 234)
-                        warn("User already exists with that username")
                     else if (xhttp.status == 400)
-                        warn("Must provide a password")
+                        warn("Must provide a password");
+                    else if(xhttp.status == 234)
+                        warn("Incorrect Password");
+                    else if(xhttp.status == 420)
+                        warn("User doesn't exist");
                 }
-                xhttp.open("POST", "/signup", true);
+                xhttp.open("POST", "/login", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(
                     'username=' + document.getElementById("userinput").value + "&password=" + document

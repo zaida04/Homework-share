@@ -14,6 +14,18 @@ var Note = new mongoose.Schema({
         username: {
             type: String,
             required: true
+        },
+        name: {
+            type: String,
+            required: false
+        },
+        type: {
+            type: String,
+            required: false
+        },
+        showname: {
+            type: Boolean,
+            default: false
         }
     },
     date: {
@@ -29,6 +41,10 @@ var Note = new mongoose.Schema({
             type: String,
             required: true
         }
+    },
+    views: {
+        type: Array,
+        required: false
     }
 });
 

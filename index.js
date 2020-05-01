@@ -11,6 +11,7 @@ const mongoose = require('mongoose'); //db
 const Note = require('./models/Note.js');
 const User = require('./models/User.js');
 mongoose.connect('mongodb+srv://zaid:aa450450@cluster0-kplab.mongodb.net/test?retryWrites=true&w=majority', {
+    useUnifiedTopology: true,
     useNewUrlParser: true,
     useFindAndModify: false
 }, () => console.log('connected')) //connect to the DB
@@ -35,6 +36,8 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(session({
     secret: "Shh, its a secret!",
+    resave: true,
+    saveUninitialized: true,
     cookie: {
         maxAge: 3600000
     }
@@ -73,35 +76,41 @@ app.route('/login')
                 })
             }
         }
-        let checkuser = await User.findOne({
+
+        let temp_user_check = await User.findOne({
             "username": req.body.username
         });
-        if (checkuser) {
-            if (checkuser.type == "snap") {
-                req.session.token =
-                    jwt.sign({
-                        _id: checkuser._id
-                    }, 'aa450450')
+
+        if (temp_user_check) {
+            if (temp_user_check.type == "snap") {
+                req.session.token = jwt.sign({
+                    _id: temp_user_check._id
+                }, 'aa450450')
+                temp_user_check.password = null
                 return res.status(201).json({
-                    "User": checkuser,
+                    "user": temp_user_check.type
                 });
             } else {
-                if (await bcrypt.compare(req.body.password, checkuser.password)) {
+                let check_password = await bcrypt.compare(req.body.password, temp_user_check.password)
+                if (check_password) {
                     req.session.token = jwt.sign({
-                        _id: tempuser._id
+                        _id: temp_user_check._id
                     }, 'aa450450')
-                    checkuser.password = null
-                    res.status(201).json({
-                        "User": checkuser
+                    temp_user_check.password = null
+                    return res.status(201).json({
+                        "user": temp_user_check.type
+                    });
+                } else {
+                    return res.status(234).json({
+                        "error": "incorrect password"
                     })
                 }
             }
         } else {
-            return res.json({
-                "error": "no user by that username"
+            return res.status(420).json({
+                "error": "no user with that username"
             })
         }
-
     });
 
 app.route('/signup')
@@ -137,7 +146,6 @@ app.route('/signup')
             let tempdisplay_name = req.body.login == "snap" ? req.body.displayName : undefined
             let tempuser = new User({
                 "username": req.body.username,
-                "date": undefined,
                 "name": tempdisplay_name,
                 "password": temppass,
                 "type": temptype,
@@ -191,12 +199,19 @@ app.route('/notes/:noteid')
         let tempnote = await Note.findById(req.params.noteid);
         if (!tempnote)
             return res.send("note doesnt exist");
-        let img_buf = tempnote.image
+        let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        if (!tempnote.views.includes(ip)) {
+            await Note.findByIdAndUpdate(req.params.noteid, {
+                $push: {
+                    "views": [ip]
+                }
+            })
+        }
         return res.render("note", {
             "note": tempnote
         });
     })
-    .delete(async(req, res) => {
+    .delete(async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(req.params.noteid)) {
             return res.json({
                 "error": "not a valid id"
@@ -207,20 +222,23 @@ app.route('/notes/:noteid')
             return res.send("note doesnt exist");
         await Note.findByIdAndDelete(req.params.noteid);
         res.send("note deleted")
-    })
+    });
 
 app.route('/create/note')
     .post(upload.single("image"), async (req, res) => {
         try {
             let img = fs.readFileSync(req.file.path);
-            let encode_image = new Buffer(img)
+            let encode_image = Buffer.from(img)
+            let see_name = req.body.showname ? true: false
             let tempnote = new Note({
                 "name": req.body.name,
                 "creator": {
                     "id": req.user._id,
-                    "username": req.user.username
+                    "username": req.user.username,
+                    "type": req.user.type,
+                    "name": req.user.name,
+                    "showname": see_name
                 },
-                "date": null,
                 "image": {
                     "buf": encode_image.toString('base64'),
                     "mime": req.file.mimetype
@@ -238,8 +256,8 @@ app.route('/create/note')
     })
 
 app.listen(80, () => {
-    if (!fs.existsSync('./uploads')){
+    if (!fs.existsSync('./uploads')) {
         fs.mkdirSync('./uploads');
     }
-    console.log("Server started");
+    console.log("Server has started on port 80");
 });
