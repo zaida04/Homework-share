@@ -10,7 +10,7 @@ const multer = require("multer");
 const mongoose = require('mongoose'); //db
 const Note = require('./models/Note.js');
 const User = require('./models/User.js');
-mongoose.connect('mongodb+srv://zaid:aa450450@cluster0-kplab.mongodb.net/test?retryWrites=true&w=majority', {
+mongoose.connect(PROCESS.ENV.MONGO_URL, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useFindAndModify: false
