@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 var app = express();
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const fs = require('fs')
