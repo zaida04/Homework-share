@@ -10,11 +10,13 @@ const multer = require("multer");
 const mongoose = require('mongoose'); //db
 const Note = require('./models/Note.js');
 const User = require('./models/User.js');
-mongoose.connect(PROCESS.ENV.MONGO_URL, {
+mongoose.connect(process.env.MONGO_URL, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useFindAndModify: false
 }, () => console.log('connected')) //connect to the DB
+app.locals.url = "https://hw.yaznic.me/
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
