@@ -258,7 +258,7 @@ app.route('/create/note')
         res.sendFile(__dirname + '/public/createNote.html')
     })
 
-app.listen(80, () => {
+app.listen(2052, () => {
     if (!fs.existsSync('./uploads')) {
         fs.mkdirSync('./uploads');
     }
