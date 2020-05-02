@@ -46,7 +46,7 @@ app.use(session({
     }
 }));
 app.use(bodyParser.json()); //USE BODYPARSER
-app.set('views', __dirname + '\\views'); //SET THE VIEW FOLDER
+app.set('views', __dirname + '/views'); //SET THE VIEW FOLDER
 app.set('view engine', 'pug'); //SET THE VIEW ENGINE
 
 /*
