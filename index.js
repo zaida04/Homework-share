@@ -179,8 +179,7 @@ app.use(async (req, res, next) => {
 
 app.get('/', async (req, res) => {
     let notes = await Note.find({});
-    let decodedimage = notes.image;
-    notes.image = null;
+    notes.sort((a, b) => new Date(b.date) - new Date(a.date))
     return res.render('index', {
         "notes": notes
     });
