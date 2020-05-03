@@ -258,9 +258,9 @@ app.route('/create/note')
         res.sendFile(__dirname + '/public/createNote.html')
     })
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, 'localhost', () => {
     if (!fs.existsSync('./uploads')) {
         fs.mkdirSync('./uploads');
-    }
-    console.log("Server has started on port 80");
+    } 
+    console.log("Server has started on port " + process.env.PORT);
 });
