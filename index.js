@@ -258,7 +258,7 @@ app.route('/create/note')
         res.sendFile(__dirname + '/public/createNote.html')
     })
 
-app.listen(process.env.PORT, 'localhost', () => {
+app.listen(process.env.PORT, '0.0.0.0', () => {
     if (!fs.existsSync('./uploads')) {
         fs.mkdirSync('./uploads');
     } 
