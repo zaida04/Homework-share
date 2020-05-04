@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const session = require('express-session');
+var SQLiteStore = require('connect-sqlite3')(session);
 const bcrypt = require('bcryptjs');
 const fs = require('fs')
 const multer = require("multer");
@@ -38,6 +39,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(session({
+    store: new SQLiteStore,
     secret: "Shh, its a secret!",
     resave: true,
     saveUninitialized: true,
