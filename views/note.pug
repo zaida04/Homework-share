@@ -22,7 +22,7 @@ block content
           p.card-text Uploaded By: #{note.creator.name}  
         else
           p.card-text Uploaded By: #{note.creator.username}
-      input(value="https://hw-share.yaznic.me/notes/" + #{note.id} id="share-link" onclick="copy()" disabled)
+      input(value="https://hw-share.yaznic.me/notes/" + note.id id="share-link" onclick="copy()" disabled)
       h2 You can copy paste the link above to share this note
       script.
         var copyText = document.getElementById("share-link");
