@@ -22,5 +22,11 @@ block content
           p.card-text Uploaded By: #{note.creator.name}  
         else
           p.card-text Uploaded By: #{note.creator.username}
-      a(href="data:" + note.image.mime + ";base64," + note.image.buf)
-        img.card-img-bottom(src="data:" + note.image.mime + ";base64," + note.image.buf alt='Card image')
+      input(value="https://hw-share.yaznic.me/notes/#{note.id}" id="share-link" onclick="copy()" disabled) Click to copy the link to this Note
+      script.
+        var copyText = document.getElementById("share-link");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+        document.execCommand("copy");
+    a(href="data:" + note.image.mime + ";base64," + note.image.buf)
+      img.card-img-bottom(src="data:" + note.image.mime + ";base64," + note.image.buf alt='Card image')

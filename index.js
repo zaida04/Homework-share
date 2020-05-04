@@ -63,9 +63,7 @@ app.use('/create', async (req, res, next) => {
         tempuser.password = null;
         tempuser ? req.user = tempuser : req.user = null;
     } else {
-        return res.status(400).json({
-            "Error": "Not logged in"
-        })
+        return res.redirect('/login.html');
     }
     return next();
 });
