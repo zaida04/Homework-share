@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useFindAndModify: false
 }, () => console.log('connected')) //connect to the DB
-app.locals.url = "https://hw.yaznic.me/";
+app.locals.url = "https://note-share.yaznic.me/";
 
 
 var storage = multer.diskStorage({
